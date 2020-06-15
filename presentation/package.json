@@ -1,0 +1,23 @@
+{
+  "name": "tdd-workshop",
+  "version": "1.1.0",
+  "description": "tdd workshop",
+  "main": "reveal.html",
+  "scripts": {
+    "start": "reveal-md slides/index.md -w --template reveal.html --highlight-theme foundation",
+    "pdf": "decktape --chrome-arg=--no-sandbox -s 1920x1080 -p 50 --load-pause 50 reveal http://localhost:1948/index.md#/ pdf/tdd.pdf"
+  },
+  "keywords": [
+    "C#",
+    "TDD",
+    "testing",
+    "workshop",
+    "slides"
+  ],
+  "author": "Patrick Drechsler",
+  "license": "ISC",
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "reveal-md": "^3.5.0"
+  }
+}
