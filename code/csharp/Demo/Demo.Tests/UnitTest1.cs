@@ -1,4 +1,4 @@
-using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Demo.Tests
@@ -8,6 +8,7 @@ namespace Demo.Tests
         [Fact]
         public void Test1()
         {
+            true.Should().BeTrue();
         }
     }
 }
