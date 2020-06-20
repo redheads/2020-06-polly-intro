@@ -14,7 +14,8 @@ namespace Demo.UI
             InitLogger();
 
             // Demo0();
-            Demo1();
+            // Demo1();
+            Demo2();
         }
 
         private static void Demo0()
@@ -35,6 +36,27 @@ namespace Demo.UI
             var policy = Policy
                 .Handle<MyException>()
                 .WaitAndRetry(3, x => TimeSpan.FromSeconds(2));
+
+            var someService = new SomeService();
+            
+            var businessLogic = new BusinessLogic(someService, policy);
+
+            var result = businessLogic.CallThrowingCode();
+
+            Log.Information($"Result: {result}");
+        }
+
+        private static void Demo2()
+        {
+            var policy = Policy
+                .Handle<MyException>()
+                .WaitAndRetry(new []
+                {
+                    TimeSpan.FromSeconds(1), 
+                    TimeSpan.FromSeconds(2), 
+                    TimeSpan.FromSeconds(4), 
+                    TimeSpan.FromSeconds(8) 
+                });
 
             var someService = new SomeService();
             
