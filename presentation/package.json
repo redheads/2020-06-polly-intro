@@ -16,6 +16,7 @@
   "author": "Patrick Drechsler",
   "license": "ISC",
   "dependencies": {
+    "decktape": "^3.0.0",
     "font-awesome": "^4.7.0",
     "reveal-md": "^3.5.0"
   }
