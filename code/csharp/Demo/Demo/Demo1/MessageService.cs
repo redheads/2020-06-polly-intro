@@ -35,7 +35,7 @@ namespace Demo.Demo1
             
             _circuitBreakerPolicy = Policy
                 .Handle<Exception>()
-                .CircuitBreaker(1, TimeSpan.FromMinutes(1),
+                .CircuitBreaker(1, TimeSpan.FromSeconds(1),
                     (ex, t) =>
                     {
                         Log.Information("Circuit broken!");
@@ -49,7 +49,15 @@ namespace Demo.Demo1
         
         public MessageResult GetHelloMessage()
         {
-            return _retryPolicy.Execute(() => _messageRepository.GetHelloMessage());
+            try
+            {
+                return _retryPolicy.Execute(() => _messageRepository.GetHelloMessage());
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex.Message);
+                return MessageResult.Exception;
+            }
         }
         
         public MessageResult GetGoodbyeMessage()

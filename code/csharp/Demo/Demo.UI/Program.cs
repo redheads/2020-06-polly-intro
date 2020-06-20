@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using Demo.Demo0;
+using Demo.Demo1;
 using Polly;
 using Polly.Timeout;
 using Serilog;
@@ -13,9 +15,11 @@ namespace Demo.UI
         {
             InitLogger();
 
-            Demo0a();
+            // Demo0a();
             // Demo0b();
             // Demo0c();
+            
+            Demo1a();
         }
 
         private static void Demo0a()
@@ -68,6 +72,17 @@ namespace Demo.UI
             Log.Information($"Result: {result}");
         }
 
+        private static void Demo1a()
+        {
+            var messageService = new MessageService(new MessageRepository());
+            for (var i = 1; i <= 10; i++)
+            {
+                Log.Information($"Loop {i} started. Waiting 1sec...");
+                Thread.Sleep(1000);
+                messageService.GetGoodbyeMessage();
+            }
+        }
+        
         private static void InitLogger()
         {
             Log.Logger = new LoggerConfiguration()
