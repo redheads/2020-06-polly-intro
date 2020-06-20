@@ -20,11 +20,12 @@ namespace Demo.UI
 
         private static void Demo0()
         {
-            var timeoutPolicy = Policy.Timeout(1, TimeoutStrategy.Pessimistic);
+            var policy = Policy
+                .Timeout(1, TimeoutStrategy.Pessimistic);
 
             var someService = new SomeService();
             
-            var businessLogic = new BusinessLogic(someService, timeoutPolicy);
+            var businessLogic = new BusinessLogic(someService, policy);
 
             var result = businessLogic.CallSomeSlowCode();
 
@@ -34,7 +35,7 @@ namespace Demo.UI
         private static void Demo1()
         {
             var policy = Policy
-                .Handle<MyException>()
+                .Handle<Exception>()
                 .WaitAndRetry(3, x => TimeSpan.FromSeconds(2));
 
             var someService = new SomeService();
@@ -49,7 +50,7 @@ namespace Demo.UI
         private static void Demo2()
         {
             var policy = Policy
-                .Handle<MyException>()
+                .Handle<Exception>()
                 .WaitAndRetry(new []
                 {
                     TimeSpan.FromSeconds(1), 

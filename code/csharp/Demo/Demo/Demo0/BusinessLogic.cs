@@ -37,7 +37,7 @@ namespace Demo.Demo0
             {
                 return _policy.Execute(() => _someService.ThrowingCode());
             }
-            catch (MyException ex)
+            catch (Exception ex)
             {
                 Log.Information($"Ups: {ex.Message}");
                 return ServiceResult.Throw;

@@ -15,11 +15,7 @@ namespace Demo.Demo0
         public ServiceResult ThrowingCode()
         {
             Log.Information("ThrowingCode called...");
-            throw new MyException();
+            throw new Exception();
         }
-    }
-
-    public class MyException : Exception
-    {
     }
 }

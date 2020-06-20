@@ -39,12 +39,12 @@ namespace Demo.Tests.Demo0
             // Arrange
             var someService = Substitute.For<ISomeService>();
             someService.ThrowingCode()
-                .Throws(new MyException());
+                .Throws(new Exception());
 
             var syncPolicy = Substitute.For<ISyncPolicy>();
             syncPolicy
                 .Execute(Arg.Any<Func<ServiceResult>>())
-                .Throws(new MyException());
+                .Throws(new Exception());
 
             var sut = new BusinessLogic(someService, syncPolicy);
             
