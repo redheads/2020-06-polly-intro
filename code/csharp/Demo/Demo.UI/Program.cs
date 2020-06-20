@@ -13,12 +13,12 @@ namespace Demo.UI
         {
             InitLogger();
 
-            // Demo0();
-            // Demo1();
-            Demo2();
+            Demo0a();
+            // Demo0b();
+            // Demo0c();
         }
 
-        private static void Demo0()
+        private static void Demo0a()
         {
             var policy = Policy
                 .Timeout(1, TimeoutStrategy.Pessimistic);
@@ -32,7 +32,7 @@ namespace Demo.UI
             Log.Information($"Result: {result}");
         }
 
-        private static void Demo1()
+        private static void Demo0b()
         {
             var policy = Policy
                 .Handle<Exception>()
@@ -47,7 +47,7 @@ namespace Demo.UI
             Log.Information($"Result: {result}");
         }
 
-        private static void Demo2()
+        private static void Demo0c()
         {
             var policy = Policy
                 .Handle<Exception>()
