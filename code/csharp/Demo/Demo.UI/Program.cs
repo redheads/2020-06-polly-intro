@@ -2,6 +2,7 @@
 using Polly;
 using Polly.Timeout;
 using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Demo.UI
 {
@@ -28,7 +29,7 @@ namespace Demo.UI
         private static void InitLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
+                .WriteTo.Console(theme: ConsoleTheme.None)
                 .CreateLogger();
         }
     }
