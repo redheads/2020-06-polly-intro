@@ -1,5 +1,5 @@
 <h2 style="position: absolute; top: 100px; color: #000; text-transform: none;">Polly: Eine "Resilience" Bibliothek</h2>
-<h3 style="position: absolute; top: 300px; color: #000; text-transform: none;">(Kategorie: nuetzliche NuGet Pakete)</h3>
+<h3 style="position: absolute; top: 300px; color: #000; text-transform: none;">(Kategorie: nützliche NuGet Pakete)</h3>
 
 <img src="./images/Polly-Logo.png" class="borderless" style="position: relative; top: 10px; right: -400px; height: 400px">
 
@@ -20,20 +20,24 @@
 
 ---
 
-## Resilience
+## Resilience als "1st Class Citizen"
 
-Fehlerhaftes Verhalten von anderen/externen Diensten als "normal" betrachten
+Fehlerhaftes Verhalten von anderen Diensten 
+
+- als "normal" betrachten und 
+- flexibel darauf reagieren
 
 ---
 
-> Polly is a .NET **resilience** and transient-fault-handling library that **allows developers to express policies such as Retry, Circuit Breaker, Timeout**, Bulkhead Isolation, and Fallback **in a fluent and thread-safe manner**. Polly targets .NET 4.0, .NET 4.5 and .NET Standard 1.1.
+> Polly is a .NET **resilience** and transient-fault-handling library that **allows developers to express policies such as Retry, Circuit Breaker, Timeout**, Bulkhead Isolation, and Fallback **in a fluent and thread-safe manner**.
 
 ---
 
 ## Polly Project
 
 - stabiles, gepflegtes Repo
-- grosse Community
+- große Community
+- 7k Sterne auf Github
 - [https://github.com/App-vNext/Polly](https://github.com/App-vNext/Polly)
 - [http://www.thepollyproject.org](http://www.thepollyproject.org)
 
@@ -52,12 +56,20 @@ Fehlerhaftes Verhalten von anderen/externen Diensten als "normal" betrachten
 - **Retry**
   - "keine Antwort -> nochmal probieren"
 - **Circuit Breaker**
-  - "wenn... -> verhindere weiter Anfragen, damit sich der Dienst erholen kann"
+  - "verhindere weiter Anfragen, damit sich der Dienst erholen kann"
+  - "wenn sich Dienst wieder erholt hat -> weitermachen"
 - ...
 
 ---
 
-## Beispiel 1: Retry
+## Polly Standardvorgehen
+
+- Policy definieren
+- eigentliche Funktion in Policy "einpacken"
+
+---
+
+## Beispiel Use-Case
 
 ```csharp
 public class BusinessLogic
@@ -75,46 +87,32 @@ public class BusinessLogic
 
 ---
 
-```csharp
-  public int CallFlakyMethod() 
-  {
-    return _srv.SlowMethod();
-  }
-```
+## Beispiel 1: Retry
 
 ---
 
-`Policy.Execute(...)`
+### Retry-Policy definieren
 
-```csharp
-  public int CallFlakyMethod() 
-  {
-    return _policy.Execute(() => _srv.SlowMethod());
-  }
-```
+<pre><code data-noescape data-trim class="lang-csharp hljs">
+var _policy = Policy
+    <span class="highlightcode">.Handle&lt;<span style="font-weight: normal">Exception</span>&gt;()</span>
+    <span class="highlightcode">.WaitAndRetry(</span><span style="font-weight: normal">3, x => TimeSpan.FromSeconds(2)</span><span class="highlightcode">);</span>
+</code></pre>
 
----
-
-`Policy.ExecuteAndContain(...)`
-
-```csharp
-  public int CallFlakyMethod() 
-  {
-    var policyResult = 
-      _policy.ExecuteAndContain(() => _srv.SlowMethod());
-
-    // TODO
-  }
-```
+- `Handle`: welche Exception?
+- `WaitAndRetry`: Policy "Strategie"
 
 ---
 
-Policies koennen sehr feingranular definiert werden, z.B.:
+### Policy anwenden
 
-- erst: 3x Retry
-- dann: 2x Retry mit logarithmischen Abstaenden (in 2min, in 20min, etc)
-- dann: Circuit Braker
-- dann: Failover
+<pre><code data-noescape data-trim class="lang-csharp hljs">
+public int CallFlakyMethod()
+{
+  <span class="fragment fade-in-then-out" data-fragment-index="1">return _srv.SlowMethod();</span>
+  <span class="highlightcode fragment" data-fragment-index="2">return _policy.Execute(</span><span class="fragment" data-fragment-index="2" style="color: black;">() => _srv.SlowMethod()</span><span class="highlightcode fragment" data-fragment-index="2" style="color: black;">);</span>
+}
+</code></pre>
 
 ---
 
@@ -122,18 +120,35 @@ Policies koennen sehr feingranular definiert werden, z.B.:
 
 ```csharp
 var circuitBreakerPolicy = Policy
-  .Handle<Exception>()
-  .CircuitBreaker(1, TimeSpan.FromSeconds(1),
-      (ex, t) =>
-      {
-          Log.Information("Circuit broken!");
-      },
-      () =>
-      {
-          Log.Information("Circuit Reset!");
-      });
+    .Handle<Exception>()
+    .CircuitBreaker(1, TimeSpan.FromSeconds(1),
+        (ex, t) =>
+        {
+            Log.Information("Circuit broken!");
+        },
+        () =>
+        {
+            Log.Information("Circuit Reset!");
+        });
 ```
 
 ---
 
 ![screenshot-circuit-breaker](images/screenshot-circuit-breaker.png)
+
+---
+
+## Live-Demo
+
+---
+
+Policies können 
+
+- sehr feingranular definiert werden
+- miteinander kombiniert werden
+
+---
+
+## Fazit
+
+Polly einsetzen, wenn man oft und/oder komplexe Policies einsetzt.
