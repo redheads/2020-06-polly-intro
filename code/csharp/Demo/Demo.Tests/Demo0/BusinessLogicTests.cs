@@ -32,5 +32,27 @@ namespace Demo.Tests.Demo0
             // Assert
             result.Should().Be(ServiceResult.Timeout);
         }
+
+        [Fact]
+        public void Returns_ServiceResult_Throw()
+        {
+            // Arrange
+            var someService = Substitute.For<ISomeService>();
+            someService.ThrowingCode()
+                .Throws(new MyException());
+
+            var syncPolicy = Substitute.For<ISyncPolicy>();
+            syncPolicy
+                .Execute(Arg.Any<Func<ServiceResult>>())
+                .Throws(new MyException());
+
+            var sut = new BusinessLogic(someService, syncPolicy);
+            
+            // Act
+            var result = sut.CallThrowingCode();
+            
+            // Assert
+            result.Should().Be(ServiceResult.Throw);
+        }
     }
 }

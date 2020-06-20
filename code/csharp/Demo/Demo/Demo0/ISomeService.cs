@@ -7,5 +7,6 @@ namespace Demo.Demo0
     {
         // method is called synchronously...
         ServiceResult SlowCode();
+        ServiceResult ThrowingCode();
     }
 }

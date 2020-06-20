@@ -1,4 +1,6 @@
+using System;
 using System.Threading;
+using Serilog;
 
 namespace Demo.Demo0
 {
@@ -9,5 +11,15 @@ namespace Demo.Demo0
             Thread.Sleep(1500);
             return ServiceResult.Success;
         }
+
+        public ServiceResult ThrowingCode()
+        {
+            Log.Information("ThrowingCode called...");
+            throw new MyException();
+        }
+    }
+
+    public class MyException : Exception
+    {
     }
 }

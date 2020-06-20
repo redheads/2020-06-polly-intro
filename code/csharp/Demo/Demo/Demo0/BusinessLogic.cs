@@ -1,3 +1,4 @@
+using System;
 using Polly;
 using Polly.Timeout;
 using Serilog;
@@ -27,6 +28,19 @@ namespace Demo.Demo0
             {
                 Log.Information($"Ups: {ex.Message}");
                 return ServiceResult.Timeout;
+            }
+        }
+
+        public ServiceResult CallThrowingCode()
+        {
+            try
+            {
+                return _policy.Execute(() => _someService.ThrowingCode());
+            }
+            catch (MyException ex)
+            {
+                Log.Information($"Ups: {ex.Message}");
+                return ServiceResult.Throw;
             }
         }
     }
