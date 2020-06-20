@@ -57,7 +57,7 @@ Fehlerhaftes Verhalten von anderen/externen Diensten als "normal" betrachten
 
 ---
 
-## Beispiel
+## Beispiel 1: Retry
 
 ```csharp
 public class BusinessLogic
@@ -115,4 +115,25 @@ Policies koennen sehr feingranular definiert werden, z.B.:
 - dann: 2x Retry mit logarithmischen Abstaenden (in 2min, in 20min, etc)
 - dann: Circuit Braker
 - dann: Failover
-  
+
+---
+
+## Beispiel 2: Circuit Breaker
+
+```csharp
+var circuitBreakerPolicy = Policy
+  .Handle<Exception>()
+  .CircuitBreaker(1, TimeSpan.FromSeconds(1),
+      (ex, t) =>
+      {
+          Log.Information("Circuit broken!");
+      },
+      () =>
+      {
+          Log.Information("Circuit Reset!");
+      });
+```
+
+---
+
+![screenshot-circuit-breaker](images/screenshot-circuit-breaker.png)
